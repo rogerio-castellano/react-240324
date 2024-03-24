@@ -9,7 +9,7 @@ export default function List({ entities }: Props) {
     <>
       <div className="container">
         <div className="row">
-          {entities.map((item, index) => (
+          {entities.map((item) => (
             <>
               <div className="col-3">
                 <Card entity={item} />

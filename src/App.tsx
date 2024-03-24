@@ -8,12 +8,16 @@ import Title from "./Title";
 function App() {
   const [users, setUsers] = useState<any>([]);
 
-  const addUser = async () => {
+  async function newUser(): Promise<any> {
     const resp = await fetch("https://randomuser.me/api/");
     const payload = await resp.json();
     const newUser = payload.results[0];
-    console.log(newUser);
-    setUsers((users: any) => [...users, newUser]);
+    return newUser;
+  }
+
+  const addUser = async () => {
+    const user = await newUser();
+    setUsers((users: any) => [...users, user]);
   };
 
   const removeLastUser = () => {
@@ -24,6 +28,16 @@ function App() {
     setUsers([]);
   };
 
+  const replaceMiddle = async () => {
+    const middle = users[Math.floor(users.length / 2)];
+    const user = await newUser();
+    setUsers(
+      users.map((item: any) =>
+        item.id.value === middle.id.value ? user : item
+      )
+    );
+  };
+
   return (
     <>
       <Title title="Users">In this lab I am using Users mock data.</Title>
@@ -32,6 +46,7 @@ function App() {
         add={addUser}
         removeLast={removeLastUser}
         clear={clearUsers}
+        replaceMiddle={replaceMiddle}
         empty={users.length === 0}
       />
       <List entities={users} />
