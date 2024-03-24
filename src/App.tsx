@@ -1,25 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import Counter from "./Counter";
+import Crud from "./Crud";
+import List from "./List";
+import Title from "./Title";
 
 function App() {
+  const [users, setUsers] = useState<any>([]);
+
+  const addUser = async () => {
+    const resp = await fetch("https://randomuser.me/api/");
+    const payload = await resp.json();
+    const newUser = payload.results[0];
+    console.log(newUser);
+    setUsers((users: any) => [...users, newUser]);
+  };
+
+  const removeLastUser = () => {
+    setUsers(users.slice(0, -1));
+  };
+
+  const clearUsers = () => {
+    setUsers([]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Title title="Users">In this lab I am using Users mock data.</Title>
+      <Counter entityCount={users.length} />
+      <Crud
+        add={addUser}
+        removeLast={removeLastUser}
+        clear={clearUsers}
+        empty={users.length === 0}
+      />
+      <List entities={users} />
+    </>
   );
 }
 
